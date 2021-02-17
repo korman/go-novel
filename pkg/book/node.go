@@ -1,6 +1,7 @@
 package book
 
-type Node interface {
-	Text() string
-	ChildNodes() []Node
+type BookNode struct {
+	Brief     string
+	IndexText string
+	Childs    []*BookNode
 }

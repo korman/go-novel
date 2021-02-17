@@ -1,12 +1,14 @@
 package book
 
-type Book interface {
-	BookInfo() BookInfo
-	Chapters() []Node
+type Book struct {
+	BookInfomation *BookInfo
+	Chapters       []*BookNode
 }
 
-type BookInfo interface {
-	BookName() string
-	Auther() string
-	Version() string
+func (this *Book) init() {
+	this.BookInfomation = new(BookInfo)
+}
+
+func (this *Book) Load(txt string) error {
+	return nil
 }
