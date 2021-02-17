@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"gonovel/utils"
+	"gonovel/internal/utils"
 	"regexp"
 	"testing"
 )
