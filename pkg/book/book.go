@@ -2,10 +2,9 @@ package book
 
 import (
 	"gonovel/configs"
+	"gonovel/internal/utils"
 	"regexp"
 	"strings"
-
-	"github.com/pkumza/numcn"
 )
 
 type Book struct {
@@ -64,25 +63,21 @@ func (this *Book) parseVolumes(s string) (string, int) {
 	for _, v := range configs.VolumeRegexp {
 		reg := regexp.MustCompile(v)
 
-		volIds := reg.FindAllStringIndex(s, -1)
+		volIds := reg.FindAllStringIndex(s, 1)
 
 		if nil == volIds {
 			continue
 		}
 
-		for i := 0; i < len(volIds); i++ {
-			info := s[volIds[i][0]:volIds[i][1]]
+		info := s[volIds[0][0]:volIds[0][1]]
 
-			println(info)
+		println(info)
 
-			nm, err := numcn.DecodeToInt64(info)
+		idx, _ := utils.GenNumberFromString(info)
 
-			if nil != err {
-				continue
-			}
+		index = int(idx)
 
-			index = int(nm)
-		}
+		break
 	}
 
 	return "", index
