@@ -41,23 +41,44 @@ func (this *Book) parseSingleLine(s string) []string {
 
 	lineList := reg.FindAllStringIndex(s, -1)
 
+	var currentIndex int = -1
+
+	chapters := make([]*BookNode, 0)
+	var chapter *BookNode = nil
+
 	for i := 0; i < len(lineList); i++ {
 		info := s[lineList[i][0]:lineList[i][1]]
 		info = strings.Replace(info, " ", "", -1)
 
-		remainingString, index := this.parseVolumes(info)
+		index := this.parseVolumes(info)
 
 		if -1 == index {
 			continue
-		}
+		} else if currentIndex == index {
+			continue
+		} else if currentIndex < index {
+			if nil != chapter {
+				chapter.EndPos = lineList[i][0] - 1
+				chapters = append(chapters, chapter)
+			}
 
-		println(remainingString)
+			chapter = new(BookNode)
+			chapter.Index = index
+			chapter.NodeType = "卷"
+			chapter.StartPos = lineList[i][1]
+		}
+	}
+
+	if nil != chapter {
+		chapter.EndPos = len(s) - 1
+		chapters = append(chapters, chapter)
+		chapter = nil
 	}
 
 	return strlist
 }
 
-func (this *Book) parseVolumes(s string) (string, int) {
+func (this *Book) parseVolumes(s string) int {
 	var index int = -1
 
 	for _, v := range configs.VolumeRegexp {
@@ -70,9 +91,6 @@ func (this *Book) parseVolumes(s string) (string, int) {
 		}
 
 		info := s[volIds[0][0]:volIds[0][1]]
-
-		println(info)
-
 		idx, _ := utils.GenNumberFromString(info)
 
 		index = int(idx)
@@ -80,7 +98,7 @@ func (this *Book) parseVolumes(s string) (string, int) {
 		break
 	}
 
-	return "", index
+	return index
 }
 
 func (this *Book) parseSubInfo(s string) error {
