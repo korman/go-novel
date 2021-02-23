@@ -2,6 +2,7 @@ package book
 
 import (
 	"gonovel/configs"
+	"gonovel/internal/inter"
 	"gonovel/internal/utils"
 	"regexp"
 	"strings"
@@ -9,7 +10,7 @@ import (
 
 type Book struct {
 	BookInfomation *BookInfo
-	Chapters       []*BookNode
+	Chapters       []*inter.Node
 }
 
 func (this *Book) Load(txt string) error {
@@ -43,8 +44,8 @@ func (this *Book) parseSingleLine(s string) []string {
 
 	var currentIndex int = -1
 
-	chapters := make([]*BookNode, 0)
-	var chapter *BookNode = nil
+	chapters := make([]inter.Node, 0)
+	var chapter inter.Node = nil
 
 	for i := 0; i < len(lineList); i++ {
 		info := s[lineList[i][0]:lineList[i][1]]
@@ -58,11 +59,11 @@ func (this *Book) parseSingleLine(s string) []string {
 			continue
 		} else if currentIndex < index {
 			if nil != chapter {
-				chapter.EndPos = lineList[i][0] - 1
+				chapter.SetEndPos(lineList[i][0] - 1)
 				chapters = append(chapters, chapter)
 			}
 
-			chapter = new(BookNode)
+			chapter = new()
 			chapter.Index = index
 			chapter.NodeType = "卷"
 			chapter.StartPos = lineList[i][1]
