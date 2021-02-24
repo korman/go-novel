@@ -14,9 +14,10 @@ type VolumeNode struct {
 	startPos int
 	endPos   int
 	index    int
-	brief    int
+	brief    string
 	nodeType global.NodeType
 	childs   []inter.Node
+	text     string
 }
 
 func (this *VolumeNode) Parse(s string) (string, error) {
@@ -38,7 +39,7 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 		}
 
 		if -1 < this.index && -1 < this.startPos {
-			this.endPos = lineList[i][0] - 1
+			this.endPos = lineList[i][0]
 			break
 		}
 
@@ -50,10 +51,16 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 		return "", errors.New("没有找到卷")
 	}
 
-	return s[this.endPos+1:], nil
+	this.text = s[this.startPos:this.endPos]
+
+	return s[this.endPos:], nil
 }
 
-func (this *VolumeNode) init() {
+func (this *VolumeNode) Text() string {
+	return this.text
+}
+
+func (this *VolumeNode) Init() {
 	this.childs = make([]inter.Node, 0)
 	this.index = -1
 	this.startPos = -1
@@ -84,34 +91,35 @@ func (this *VolumeNode) parseVolumes(s string) int {
 }
 
 func (this *VolumeNode) StartPos() int {
-	return 0
+	return this.startPos
 }
 
 func (this *VolumeNode) SetStartPos(pos int) {
+	this.startPos = pos
 }
 
 func (this *VolumeNode) EndPos() int {
-	return 0
+	return this.endPos
 }
 
 func (this *VolumeNode) SetEndPos(pos int) {
-
+	this.endPos = pos
 }
 
 func (this *VolumeNode) Index() int {
-	return 0
+	return this.index
 }
 
 func (this *VolumeNode) SetIndex(index int) {
-
+	this.index = index
 }
 
 func (this *VolumeNode) Brief() string {
-	return ""
+	return this.brief
 }
 
 func (this *VolumeNode) SetBrief(s string) {
-
+	this.brief = s
 }
 
 func (this *VolumeNode) NodeType() global.NodeType {

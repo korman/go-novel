@@ -3,6 +3,7 @@ package inter
 import global "gonovel/internal"
 
 type Node interface {
+	Init()
 	StartPos() int
 	SetStartPos(int)
 	EndPos() int
@@ -14,5 +15,6 @@ type Node interface {
 	NodeType() global.NodeType
 	SetNodeType(global.NodeType)
 	Childs() []Node
+	Text() string
 	Parse(string) (string, error)
 }

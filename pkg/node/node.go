@@ -12,6 +12,7 @@ func CreateNode(nodeType global.NodeType) inter.Node {
 	switch nodeType {
 	case global.Volume:
 		node = new(internal.VolumeNode)
+		node.Init()
 	}
 
 	return node
