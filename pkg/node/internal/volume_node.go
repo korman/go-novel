@@ -50,7 +50,7 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 	if -1 == this.index {
 		return "", errors.New("没有找到卷")
 	}
-
+	//没处理结尾
 	this.text = s[this.startPos:this.endPos]
 
 	global.Error(this.text)
