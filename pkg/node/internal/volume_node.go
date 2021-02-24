@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"gonovel/configs"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
@@ -18,7 +19,7 @@ type VolumeNode struct {
 	childs   []inter.Node
 }
 
-func (this *VolumeNode) Parse(s string) error {
+func (this *VolumeNode) Parse(s string) (string, error) {
 	reg := regexp.MustCompile("(?m)^(.+)")
 
 	lineList := reg.FindAllStringIndex(s, -1)
@@ -34,22 +35,29 @@ func (this *VolumeNode) Parse(s string) error {
 			continue
 		} else if this.index == index {
 			continue
-		} else if this.index < index {
-			this.endPos = lineList[i][0] - 1
-
-			this.index = index
-			this.nodeType = global.Volume
-			this.startPos = lineList[i][1]
 		}
 
+		if -1 < this.index && -1 < this.startPos {
+			this.endPos = lineList[i][0] - 1
+			break
+		}
+
+		this.index = index
+		this.startPos = lineList[i][1]
 	}
 
-	return nil
+	if -1 == this.index {
+		return "", errors.New("没有找到卷")
+	}
+
+	return s[this.endPos+1:], nil
 }
 
 func (this *VolumeNode) init() {
 	this.childs = make([]inter.Node, 0)
 	this.index = -1
+	this.startPos = -1
+	this.endPos = -1
 }
 
 func (this *VolumeNode) parseVolumes(s string) int {

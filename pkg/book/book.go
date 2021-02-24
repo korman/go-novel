@@ -34,14 +34,18 @@ func (this *Book) Load(txt string) error {
 }
 
 func (this *Book) parseSingleLine(s string) []string {
-	node := node.CreateNode(global.Volume)
+	text := s
+	var err error = nil
 
-	node.Parse(s)
+	for 0 < len(text) {
+		node := node.CreateNode(global.Volume)
+		text, err = node.Parse(text)
 
-	return nil
-}
+		if nil != err {
+			return nil
+		}
+	}
 
-func (this *Book) parseSubInfo(s string) error {
 	return nil
 }
 

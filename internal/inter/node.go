@@ -14,5 +14,5 @@ type Node interface {
 	NodeType() global.NodeType
 	SetNodeType(global.NodeType)
 	Childs() []Node
-	Parse(string) error
+	Parse(string) (string, error)
 }
