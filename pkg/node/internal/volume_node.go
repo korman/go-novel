@@ -53,6 +53,8 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 
 	this.text = s[this.startPos:this.endPos]
 
+	global.Error(this.text)
+
 	return s[this.endPos:], nil
 }
 

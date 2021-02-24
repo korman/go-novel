@@ -1,6 +1,7 @@
 package tests
 
 import (
+	global "gonovel/internal"
 	"gonovel/pkg/book"
 	"testing"
 
@@ -16,6 +17,11 @@ func TestNumberCN(t *testing.T) {
 	}
 
 	t.Log(n)
+}
+
+func TestLogSystem(t *testing.T) {
+	global.Error("xxxxx")
+	global.Fatal("xxxaaaa")
 }
 
 func TestExtractChapters(t *testing.T) {
