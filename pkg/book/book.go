@@ -1,11 +1,9 @@
 package book
 
 import (
-	"gonovel/configs"
+	global "gonovel/internal"
 	"gonovel/internal/inter"
-	"gonovel/internal/utils"
-	"regexp"
-	"strings"
+	"gonovel/pkg/node"
 )
 
 type Book struct {
@@ -36,70 +34,11 @@ func (this *Book) Load(txt string) error {
 }
 
 func (this *Book) parseSingleLine(s string) []string {
-	strlist := make([]string, 0)
+	node := node.CreateNode(global.Volume)
 
-	reg := regexp.MustCompile("(?m)^(.+)")
+	node.Parse(s)
 
-	lineList := reg.FindAllStringIndex(s, -1)
-
-	var currentIndex int = -1
-
-	chapters := make([]inter.Node, 0)
-	var chapter inter.Node = nil
-
-	for i := 0; i < len(lineList); i++ {
-		info := s[lineList[i][0]:lineList[i][1]]
-		info = strings.Replace(info, " ", "", -1)
-
-		index := this.parseVolumes(info)
-
-		if -1 == index {
-			continue
-		} else if currentIndex == index {
-			continue
-		} else if currentIndex < index {
-			if nil != chapter {
-				chapter.SetEndPos(lineList[i][0] - 1)
-				chapters = append(chapters, chapter)
-			}
-
-			chapter = new()
-			chapter.Index = index
-			chapter.NodeType = "卷"
-			chapter.StartPos = lineList[i][1]
-		}
-	}
-
-	if nil != chapter {
-		chapter.EndPos = len(s) - 1
-		chapters = append(chapters, chapter)
-		chapter = nil
-	}
-
-	return strlist
-}
-
-func (this *Book) parseVolumes(s string) int {
-	var index int = -1
-
-	for _, v := range configs.VolumeRegexp {
-		reg := regexp.MustCompile(v)
-
-		volIds := reg.FindAllStringIndex(s, 1)
-
-		if nil == volIds {
-			continue
-		}
-
-		info := s[volIds[0][0]:volIds[0][1]]
-		idx, _ := utils.GenNumberFromString(info)
-
-		index = int(idx)
-
-		break
-	}
-
-	return index
+	return nil
 }
 
 func (this *Book) parseSubInfo(s string) error {
