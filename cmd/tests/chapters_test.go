@@ -27,7 +27,7 @@ func TestLogSystem(t *testing.T) {
 func TestExtractChapters(t *testing.T) {
 	book, err := book.CreateBook("txt_files/test_01.txt")
 
-	if nil == err {
+	if nil != err {
 		t.Error(err)
 	}
 
