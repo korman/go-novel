@@ -8,7 +8,7 @@ import (
 
 type Book struct {
 	BookInfomation *BookInfo
-	Chapters       []*inter.Node
+	Chapters       []inter.Node
 }
 
 func (this *Book) Load(txt string) error {
@@ -37,6 +37,8 @@ func (this *Book) parseSingleLine(s string) []string {
 	text := s
 	var err error = nil
 
+	this.Chapters = make([]inter.Node, 0)
+
 	for 0 < len(text) {
 		node := node.CreateNode(global.Volume)
 		text, err = node.Parse(text)
@@ -46,6 +48,8 @@ func (this *Book) parseSingleLine(s string) []string {
 		if nil != err {
 			return nil
 		}
+
+		this.Chapters = append(this.Chapters, node)
 	}
 
 	return nil

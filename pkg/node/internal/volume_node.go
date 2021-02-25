@@ -51,7 +51,7 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 		return "", errors.New("没有找到卷")
 	}
 
-	if -1 < this.startPos {
+	if -1 < this.startPos && -1 == this.endPos {
 		this.endPos = len(s)
 	}
 
