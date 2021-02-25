@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-type VolumeNode struct {
+type ChapterNode struct {
 	startPos int
 	endPos   int
 	index    int
@@ -20,7 +20,7 @@ type VolumeNode struct {
 	text     string
 }
 
-func (this *VolumeNode) Parse(s string) (string, error) {
+func (this *ChapterNode) Parse(s string) (string, error) {
 	reg := regexp.MustCompile("(?m)^(.+)")
 
 	lineList := reg.FindAllStringIndex(s, -1)
@@ -30,7 +30,7 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 		info := s[lineList[i][0]:lineList[i][1]]
 		info = strings.Replace(info, " ", "", -1)
 
-		index = this.parseVolumes(info)
+		index = this.parseChapter(info)
 
 		if -1 == index {
 			continue
@@ -60,18 +60,18 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 	return s[this.endPos:], nil
 }
 
-func (this *VolumeNode) Text() string {
+func (this *ChapterNode) Text() string {
 	return this.text
 }
 
-func (this *VolumeNode) Init() {
+func (this *ChapterNode) Init() {
 	this.childs = make([]inter.Node, 0)
 	this.index = -1
 	this.startPos = -1
 	this.endPos = -1
 }
 
-func (this *VolumeNode) parseVolumes(s string) int {
+func (this *ChapterNode) parseChapter(s string) int {
 	var index int = -1
 
 	for _, v := range configs.VolumeRegexp {
@@ -94,46 +94,46 @@ func (this *VolumeNode) parseVolumes(s string) int {
 	return index
 }
 
-func (this *VolumeNode) StartPos() int {
+func (this *ChapterNode) StartPos() int {
 	return this.startPos
 }
 
-func (this *VolumeNode) SetStartPos(pos int) {
+func (this *ChapterNode) SetStartPos(pos int) {
 	this.startPos = pos
 }
 
-func (this *VolumeNode) EndPos() int {
+func (this *ChapterNode) EndPos() int {
 	return this.endPos
 }
 
-func (this *VolumeNode) SetEndPos(pos int) {
+func (this *ChapterNode) SetEndPos(pos int) {
 	this.endPos = pos
 }
 
-func (this *VolumeNode) Index() int {
+func (this *ChapterNode) Index() int {
 	return this.index
 }
 
-func (this *VolumeNode) SetIndex(index int) {
+func (this *ChapterNode) SetIndex(index int) {
 	this.index = index
 }
 
-func (this *VolumeNode) Brief() string {
+func (this *ChapterNode) Brief() string {
 	return this.brief
 }
 
-func (this *VolumeNode) SetBrief(s string) {
+func (this *ChapterNode) SetBrief(s string) {
 	this.brief = s
 }
 
-func (this *VolumeNode) NodeType() global.NodeType {
+func (this *ChapterNode) NodeType() global.NodeType {
 	return global.Volume
 }
 
-func (this *VolumeNode) SetNodeType(t global.NodeType) {
+func (this *ChapterNode) SetNodeType(t global.NodeType) {
 	this.nodeType = t
 }
 
-func (this *VolumeNode) Childs() []inter.Node {
+func (this *ChapterNode) Childs() []inter.Node {
 	return this.childs
 }
