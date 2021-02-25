@@ -74,7 +74,7 @@ func (this *ChapterNode) Init() {
 func (this *ChapterNode) parseChapter(s string) int {
 	var index int = -1
 
-	for _, v := range configs.VolumeRegexp {
+	for _, v := range configs.ChapterRegexp {
 		reg := regexp.MustCompile(v)
 
 		volIds := reg.FindAllStringIndex(s, 1)

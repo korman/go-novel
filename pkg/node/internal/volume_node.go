@@ -56,6 +56,7 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 	}
 
 	this.text = s[this.startPos:this.endPos]
+	this.parseSubNode()
 
 	return s[this.endPos:], nil
 }
@@ -136,4 +137,27 @@ func (this *VolumeNode) SetNodeType(t global.NodeType) {
 
 func (this *VolumeNode) Childs() []inter.Node {
 	return this.childs
+}
+
+func (this *VolumeNode) parseSubNode() error {
+	text := this.text
+	var err error = nil
+
+	this.childs = make([]inter.Node, 0)
+
+	for 0 < len(text) {
+		node := new(ChapterNode)
+		node.Init()
+		text, err = node.Parse(text)
+
+		global.Error(text)
+
+		if nil != err {
+			return err
+		}
+
+		this.childs = append(this.childs, node)
+	}
+
+	return nil
 }

@@ -13,6 +13,9 @@ func CreateNode(nodeType global.NodeType) inter.Node {
 	case global.Volume:
 		node = new(internal.VolumeNode)
 		node.Init()
+	case global.Chapter:
+		node = new(internal.ChapterNode)
+		node.Init()
 	}
 
 	return node
