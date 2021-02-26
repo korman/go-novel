@@ -29,8 +29,9 @@ func (this *ChapterNode) Parse(s string) (string, error) {
 	for i := 0; i < len(lineList); i++ {
 		info := s[lineList[i][0]:lineList[i][1]]
 		info = strings.Replace(info, " ", "", -1)
+		//var chapterLen int = -1
 
-		index = this.parseChapter(info)
+		index, _ = this.parseChapter(info)
 
 		if -1 == index {
 			continue
@@ -48,7 +49,7 @@ func (this *ChapterNode) Parse(s string) (string, error) {
 	}
 
 	if -1 == this.index {
-		return "", errors.New("没有找到卷")
+		return "", errors.New("没有找到章节")
 	}
 
 	if -1 < this.startPos && -1 == this.endPos {
@@ -71,8 +72,9 @@ func (this *ChapterNode) Init() {
 	this.endPos = -1
 }
 
-func (this *ChapterNode) parseChapter(s string) int {
+func (this *ChapterNode) parseChapter(s string) (int, int) {
 	var index int = -1
+	var chapterLen int = -1
 
 	for _, v := range configs.ChapterRegexp {
 		reg := regexp.MustCompile(v)
@@ -84,14 +86,17 @@ func (this *ChapterNode) parseChapter(s string) int {
 		}
 
 		info := s[volIds[0][0]:volIds[0][1]]
+		info = strings.Replace(info, " ", "", -1)
 		idx, _ := utils.GenNumberFromString(info)
 
 		index = int(idx)
 
+		chapterLen = volIds[0][1] - volIds[0][0]
+
 		break
 	}
 
-	return index
+	return index, chapterLen
 }
 
 func (this *ChapterNode) StartPos() int {

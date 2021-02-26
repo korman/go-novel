@@ -43,8 +43,6 @@ func (this *Book) parseSingleLine(s string) []string {
 		node := node.CreateNode(global.Volume)
 		text, err = node.Parse(text)
 
-		global.Error(text)
-
 		if nil != err {
 			return nil
 		}

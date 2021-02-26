@@ -28,9 +28,9 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 
 	for i := 0; i < len(lineList); i++ {
 		info := s[lineList[i][0]:lineList[i][1]]
-		info = strings.Replace(info, " ", "", -1)
+		var volumeLen int = -1
 
-		index = this.parseVolumes(info)
+		index, volumeLen = this.parseVolumes(info)
 
 		if -1 == index {
 			continue
@@ -44,7 +44,7 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 		}
 
 		this.index = index
-		this.startPos = lineList[i][1]
+		this.startPos = lineList[i][0] + volumeLen
 	}
 
 	if -1 == this.index {
@@ -72,8 +72,9 @@ func (this *VolumeNode) Init() {
 	this.endPos = -1
 }
 
-func (this *VolumeNode) parseVolumes(s string) int {
+func (this *VolumeNode) parseVolumes(s string) (int, int) {
 	var index int = -1
+	var volumeLen int = -1
 
 	for _, v := range configs.VolumeRegexp {
 		reg := regexp.MustCompile(v)
@@ -85,14 +86,16 @@ func (this *VolumeNode) parseVolumes(s string) int {
 		}
 
 		info := s[volIds[0][0]:volIds[0][1]]
+		info = strings.Replace(info, " ", "", -1)
 		idx, _ := utils.GenNumberFromString(info)
 
 		index = int(idx)
+		volumeLen = volIds[0][1] - volIds[0][0]
 
 		break
 	}
 
-	return index
+	return index, volumeLen
 }
 
 func (this *VolumeNode) StartPos() int {
@@ -150,13 +153,12 @@ func (this *VolumeNode) parseSubNode() error {
 		node.Init()
 		text, err = node.Parse(text)
 
-		global.Error(text)
-
 		if nil != err {
 			return err
 		}
 
 		this.childs = append(this.childs, node)
+		global.Error(node.Text())
 	}
 
 	return nil
