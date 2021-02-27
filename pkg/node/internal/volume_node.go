@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"gonovel/configs"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
@@ -158,7 +159,7 @@ func (this *VolumeNode) parseSubNode() error {
 		}
 
 		this.childs = append(this.childs, node)
-		global.Error(node.Text())
+		global.Error(fmt.Sprintf("[第%d话] \n%s\n", node.Index(), node.Text()))
 	}
 
 	return nil
