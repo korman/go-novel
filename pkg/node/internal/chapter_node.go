@@ -61,6 +61,22 @@ func (this *ChapterNode) Parse(s string) (string, error) {
 	return s[this.endPos:], nil
 }
 
+func (this *ChapterNode) Merge(node inter.Node) error {
+	if nil == node {
+		return errors.New("空的节点")
+	}
+
+	if node.Index() != this.index {
+		return errors.New("不同的index")
+	}
+
+	for _, v := range node.Childs() {
+		this.childs = append(this.childs, v)
+	}
+
+	return nil
+}
+
 func (this *ChapterNode) Text() string {
 	return this.text
 }

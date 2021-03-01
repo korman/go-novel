@@ -1,6 +1,7 @@
 package book
 
 import (
+	"fmt"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
 	"gonovel/pkg/node"
@@ -9,6 +10,10 @@ import (
 type Book struct {
 	BookInfomation *BookInfo
 	Chapters       []inter.Node
+}
+
+func (this *Book) SetBookInfo(info *BookInfo) {
+	this.BookInfomation = info
 }
 
 func (this *Book) Load(txt string) error {
@@ -33,6 +38,16 @@ func (this *Book) Load(txt string) error {
 	return nil
 }
 
+func (this *Book) findNodeByIndex(index uint32) inter.Node {
+	for _, v := range this.Chapters {
+		if v.Index() == int(index) {
+			return v
+		}
+	}
+
+	return nil
+}
+
 func (this *Book) parseSingleLine(s string) []string {
 	text := s
 	var err error = nil
@@ -47,7 +62,15 @@ func (this *Book) parseSingleLine(s string) []string {
 			return nil
 		}
 
-		this.Chapters = append(this.Chapters, node)
+		repeatNode := this.findNodeByIndex(uint32(node.Index()))
+
+		if nil != repeatNode {
+			repeatNode.Merge(node)
+			global.Error(fmt.Sprintf("重复的卷,合并: %d", node.Index()))
+		} else {
+			this.Chapters = append(this.Chapters, node)
+			global.Error(fmt.Sprintf("卷%d", node.Index()))
+		}
 	}
 
 	return nil

@@ -2,7 +2,6 @@ package internal
 
 import (
 	"errors"
-	"fmt"
 	"gonovel/configs"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
@@ -35,8 +34,6 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 
 		if -1 == index {
 			continue
-		} else if this.index == index {
-			continue
 		}
 
 		if -1 < this.index && -1 < this.startPos {
@@ -64,6 +61,22 @@ func (this *VolumeNode) Parse(s string) (string, error) {
 
 func (this *VolumeNode) Text() string {
 	return this.text
+}
+
+func (this *VolumeNode) Merge(node inter.Node) error {
+	if nil == node {
+		return errors.New("空的节点")
+	}
+
+	if node.Index() != this.index {
+		return errors.New("不同的index")
+	}
+
+	for _, v := range node.Childs() {
+		this.childs = append(this.childs, v)
+	}
+
+	return nil
 }
 
 func (this *VolumeNode) Init() {
@@ -159,7 +172,6 @@ func (this *VolumeNode) parseSubNode() error {
 		}
 
 		this.childs = append(this.childs, node)
-		global.Error(fmt.Sprintf("[第%d话] \n%s\n", node.Index(), node.Text()))
 	}
 
 	return nil

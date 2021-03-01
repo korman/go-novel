@@ -12,6 +12,7 @@ type Node interface {
 	SetIndex(int)
 	Brief() string
 	SetBrief(string)
+	Merge(Node) error
 	NodeType() global.NodeType
 	SetNodeType(global.NodeType)
 	Childs() []Node
