@@ -16,6 +16,10 @@ func (this *Book) SetBookInfo(info *BookInfo) {
 	this.BookInfomation = info
 }
 
+func (this *Book) ConvertToMd(outpath string) error {
+	return nil
+}
+
 func (this *Book) Load(txt string) error {
 	err := this.parseBookInfo(txt)
 

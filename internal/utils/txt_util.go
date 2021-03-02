@@ -65,3 +65,21 @@ func GenNumberFromString(s string) (int64, error) {
 
 	return num, nil
 }
+
+func WriteFile(path string, text string) error {
+	f, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0666)
+
+	if nil != err {
+		return err
+	}
+
+	defer f.Close()
+
+	_, err = f.WriteString(text)
+
+	if nil != err {
+		return err
+	}
+
+	return nil
+}
