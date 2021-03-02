@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"gonovel/configs"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
@@ -179,4 +180,28 @@ func (this *VolumeNode) parseSubNode() error {
 	}
 
 	return nil
+}
+
+func (this *VolumeNode) GenReadmeMarkdownString() (string, error) {
+	var info string = fmt.Sprintf("# 第%d卷\n\n", this.index)
+
+	catalog, err := this.generateCatalogMarkdown()
+
+	if nil != err {
+		return "", err
+	}
+
+	info += catalog
+
+	return info, nil
+}
+
+func (this *VolumeNode) generateCatalogMarkdown() (string, error) {
+	var catalog string = "## 卷目录 \n\n"
+
+	for _, v := range this.childs {
+		catalog += fmt.Sprintf("* [第%d章](%d.md)\n", v.Index(), v.Index())
+	}
+
+	return catalog, nil
 }

@@ -63,7 +63,7 @@ func (this *ChapterNode) Parse(s string) (string, error) {
 }
 
 func (this *ChapterNode) GenMarkdownFormat() (string, error) {
-	header := fmt.Sprintf("## 第%d章\n", this.index)
+	header := fmt.Sprintf("# 第%d章\n", this.index)
 
 	text := header + this.text
 
@@ -166,4 +166,8 @@ func (this *ChapterNode) SetNodeType(t global.NodeType) {
 
 func (this *ChapterNode) Childs() []inter.Node {
 	return this.childs
+}
+
+func (this *ChapterNode) GenReadmeMarkdownString() (string, error) {
+	return "", nil
 }

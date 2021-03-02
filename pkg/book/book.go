@@ -25,6 +25,20 @@ func (this *Book) ConvertToMd(outpath string) error {
 
 	println("创建书籍目录：" + bookPath)
 
+	readmeString, err := this.GenReadmeMarkdownString()
+
+	err = os.MkdirAll(bookPath, os.ModePerm)
+
+	if nil != err {
+		return err
+	}
+
+	err = utils.WriteFile(filepath.Join(bookPath, "README.md"), readmeString)
+
+	if nil != err {
+		return err
+	}
+
 	for _, v := range this.Chapters {
 		volumeIndex := v.Index()
 
@@ -36,15 +50,20 @@ func (this *Book) ConvertToMd(outpath string) error {
 			return err
 		}
 
+		volumeReadme, err := v.GenReadmeMarkdownString()
+
+		if nil != err {
+			return err
+		}
+
+		volumeReadmePath := filepath.Join(volumePath, "README.md")
+		err = utils.WriteFile(volumeReadmePath, volumeReadme)
+
+		if nil != err {
+			return err
+		}
+
 		for _, c := range v.Childs() {
-			// chapterPath := filepath.Join(volumePath, strconv.Itoa(c.Index()))
-
-			// err := os.MkdirAll(chapterPath, os.ModePerm)
-
-			// if nil != err {
-			// 	return err
-			// }
-
 			fpath := filepath.Join(volumePath, fmt.Sprintf("%d.md", c.Index()))
 
 			text, err := c.GenMarkdownFormat()
@@ -62,6 +81,28 @@ func (this *Book) ConvertToMd(outpath string) error {
 	}
 
 	return nil
+}
+
+func (this *Book) GenReadmeMarkdownString() (string, error) {
+	var readme string = ""
+
+	bookinfo, err := this.genMarkdownBookInfo()
+
+	if nil != err {
+		return "", err
+	}
+
+	readme += bookinfo
+
+	catalog, err := this.generateCatalogMarkdown()
+
+	if nil != err {
+		return "", err
+	}
+
+	readme += catalog
+
+	return readme, nil
 }
 
 func (this *Book) Load(txt string) error {
@@ -128,4 +169,48 @@ func (this *Book) parseBookInfo(s string) error {
 	// TODO
 
 	return nil
+}
+
+func (this *Book) generateCatalogMarkdown() (string, error) {
+	var info string = "## 小说目录\n\n"
+
+	for _, v := range this.Chapters {
+		info += fmt.Sprintf("* [第%d卷](%d/README.md)\n", v.Index(), v.Index())
+	}
+
+	info += "\n"
+
+	return info, nil
+}
+
+func (this *Book) genMarkdownBookInfo() (string, error) {
+	var info string = ""
+
+	if "" != this.BookInfomation.BookName {
+		info += fmt.Sprintf("# %s\n\n", this.BookInfomation.BookName)
+	}
+
+	var authors string = "## 作者:\n\n"
+
+	if 0 < len(this.BookInfomation.Author) {
+		authors = "## 作者:\n\n"
+
+		for _, v := range this.BookInfomation.Author {
+			authors += fmt.Sprintf("* %s\n", v)
+		}
+
+		authors += "\n\n"
+	} else {
+		authors += "未知\n\n"
+	}
+
+	info += authors
+
+	if "" != this.BookInfomation.Intro {
+		info += fmt.Sprintf("## 简介\n\n %s\n", this.BookInfomation.Intro)
+	} else {
+		info += fmt.Sprintf("## 简介\n\n %s\n", "无简介")
+	}
+
+	return info, nil
 }
