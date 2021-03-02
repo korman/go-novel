@@ -2,6 +2,7 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"gonovel/configs"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
@@ -59,6 +60,14 @@ func (this *ChapterNode) Parse(s string) (string, error) {
 	this.text = s[this.startPos:this.endPos]
 
 	return s[this.endPos:], nil
+}
+
+func (this *ChapterNode) GenMarkdownFormat() (string, error) {
+	header := fmt.Sprintf("## 第%d章\n", this.index)
+
+	text := header + this.text
+
+	return text, nil
 }
 
 func (this *ChapterNode) Merge(node inter.Node) error {

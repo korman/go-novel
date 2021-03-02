@@ -16,6 +16,7 @@ type Node interface {
 	NodeType() global.NodeType
 	SetNodeType(global.NodeType)
 	Childs() []Node
+	GenMarkdownFormat() (string, error)
 	Text() string
 	Parse(string) (string, error)
 }

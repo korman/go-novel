@@ -63,6 +63,10 @@ func (this *VolumeNode) Text() string {
 	return this.text
 }
 
+func (this *VolumeNode) GenMarkdownFormat() (string, error) {
+	return "", nil
+}
+
 func (this *VolumeNode) Merge(node inter.Node) error {
 	if nil == node {
 		return errors.New("空的节点")

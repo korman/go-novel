@@ -34,4 +34,10 @@ func TestExtractChapters(t *testing.T) {
 	if nil == book {
 
 	}
+
+	err = book.ConvertToMd(".")
+
+	if nil != err {
+		t.Error(err)
+	}
 }

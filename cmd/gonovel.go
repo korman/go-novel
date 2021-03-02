@@ -9,6 +9,7 @@ import (
 
 func main() {
 	path := flag.String("path", "tests/txt_files/test_01.txt", "输入路径")
+	outpath := flag.String("outpath", ".", "输出书的路径")
 
 	flag.Parse()
 
@@ -28,4 +29,10 @@ func main() {
 	elapsed := time.Since(t)
 
 	println(fmt.Sprintf("耗时%s秒", elapsed))
+
+	err = book.ConvertToMd(*outpath)
+
+	if nil != err {
+		println(err)
+	}
 }

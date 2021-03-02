@@ -67,7 +67,7 @@ func GenNumberFromString(s string) (int64, error) {
 }
 
 func WriteFile(path string, text string) error {
-	f, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 
 	if nil != err {
 		return err

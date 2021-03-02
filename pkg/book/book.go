@@ -4,7 +4,11 @@ import (
 	"fmt"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
+	"gonovel/internal/utils"
 	"gonovel/pkg/node"
+	"os"
+	"path/filepath"
+	"strconv"
 )
 
 type Book struct {
@@ -17,6 +21,46 @@ func (this *Book) SetBookInfo(info *BookInfo) {
 }
 
 func (this *Book) ConvertToMd(outpath string) error {
+	bookPath := filepath.Join(outpath, this.BookInfomation.BookName)
+
+	println("创建书籍目录：" + bookPath)
+
+	for _, v := range this.Chapters {
+		volumeIndex := v.Index()
+
+		volumePath := filepath.Join(bookPath, strconv.Itoa(volumeIndex))
+
+		err := os.MkdirAll(volumePath, os.ModePerm)
+
+		if nil != err {
+			return err
+		}
+
+		for _, c := range v.Childs() {
+			// chapterPath := filepath.Join(volumePath, strconv.Itoa(c.Index()))
+
+			// err := os.MkdirAll(chapterPath, os.ModePerm)
+
+			// if nil != err {
+			// 	return err
+			// }
+
+			fpath := filepath.Join(volumePath, fmt.Sprintf("%d.md", c.Index()))
+
+			text, err := c.GenMarkdownFormat()
+
+			if nil != err {
+				return err
+			}
+
+			err = utils.WriteFile(fpath, text)
+
+			if nil != err {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 

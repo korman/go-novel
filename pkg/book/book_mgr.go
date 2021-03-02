@@ -13,6 +13,7 @@ func CreateBook(path string) (*Book, error) {
 	}
 
 	filename := filepath.Base(path)
+	filename = filename[:len(filename)-len(filepath.Ext(filename))]
 
 	book := new(Book)
 	info := new(BookInfo)
