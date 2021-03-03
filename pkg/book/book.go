@@ -1,6 +1,7 @@
 package book
 
 import (
+	"errors"
 	"fmt"
 	global "gonovel/internal"
 	"gonovel/internal/inter"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 type Book struct {
@@ -20,14 +22,48 @@ func (this *Book) SetBookInfo(info *BookInfo) {
 	this.BookInfomation = info
 }
 
+func (this *Book) ConvertToSingleMd(outpath string) error {
+	var err error = nil
+
+	var info string = ""
+
+	if "" == this.BookInfomation.BookName {
+		return errors.New("没有书名")
+	}
+
+	info += fmt.Sprintf("# %s\n\n", this.BookInfomation.BookName)
+
+	for _, v := range this.Chapters {
+		header := fmt.Sprintf("## 第%d卷\n\n", v.Index())
+
+		info += header
+
+		for _, c := range v.Childs() {
+			chapterHeader := fmt.Sprintf("### 第%d章\n\n", c.Index())
+
+			info += chapterHeader
+			text := strings.Replace(c.Text(), " ", "", -1)
+			info += text
+
+			info += "\n\n"
+		}
+	}
+
+	fullout := filepath.Join(outpath, fmt.Sprintf("%s.md", this.BookInfomation.BookName))
+
+	err = utils.WriteFile(fullout, info)
+
+	return err
+}
+
 func (this *Book) ConvertToMd(outpath string) error {
 	bookPath := filepath.Join(outpath, this.BookInfomation.BookName)
 
 	println("创建书籍目录：" + bookPath)
 
-	readmeString, err := this.GenReadmeMarkdownString()
+	err := os.MkdirAll(bookPath, os.ModePerm)
 
-	err = os.MkdirAll(bookPath, os.ModePerm)
+	readmeString, err := this.GenReadmeMarkdownString()
 
 	if nil != err {
 		return err

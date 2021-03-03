@@ -41,3 +41,21 @@ func TestExtractChapters(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestExportMarkdown(t *testing.T) {
+	book, err := book.CreateBook("txt_files/test_01.txt")
+
+	if nil != err {
+		t.Error(err)
+	}
+
+	if nil == book {
+
+	}
+
+	err = book.ConvertToSingleMd(".")
+
+	if nil != err {
+		t.Error(err)
+	}
+}

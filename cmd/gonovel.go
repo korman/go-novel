@@ -30,7 +30,7 @@ func main() {
 
 	println(fmt.Sprintf("耗时%s秒", elapsed))
 
-	err = book.ConvertToMd(*outpath)
+	err = book.ConvertToSingleMd(*outpath)
 
 	if nil != err {
 		println(err)
