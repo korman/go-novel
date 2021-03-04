@@ -6,4 +6,18 @@
 
 ## 功能(Features)
 
-NULL
+* 能提取如下格式
+
+```
+
+第一卷 第一章
+
+xxxxx xxxx
+
+第1卷 第2章
+
+yyyyy yyyy
+
+```
+
+* 能转为多文件与单文件的Markdown
