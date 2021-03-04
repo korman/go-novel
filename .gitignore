@@ -1,9 +1,14 @@
 # Binaries for programs and plugins
+.DS_Store
+logfile.json
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+cmd/cmd
+*.txt
+*.md
 
 # Test binary, built with `go test -c`
 *.test
