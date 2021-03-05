@@ -7,7 +7,6 @@ logfile.json
 *.so
 *.dylib
 cmd/cmd
-*.txt
 *.md
 
 # Test binary, built with `go test -c`

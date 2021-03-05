@@ -2,6 +2,7 @@ package tests
 
 import (
 	global "gonovel/internal"
+	"gonovel/internal/utils"
 	"gonovel/pkg/book"
 	"testing"
 
@@ -58,4 +59,16 @@ func TestExportMarkdown(t *testing.T) {
 	if nil != err {
 		t.Error(err)
 	}
+}
+
+func TestTrimHtmlTag(t *testing.T) {
+	txt, err := utils.LoadTxtFile("txt_files/html.txt")
+
+	if nil != err {
+		t.Error(err)
+	}
+
+	newTxt := utils.TrimHtmlTag(txt)
+
+	global.Error(newTxt)
 }
